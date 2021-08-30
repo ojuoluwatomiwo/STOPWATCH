@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./bootstrap.css">
+    <title>Stopwatch</title>
+    <style>
+        #clock {
+            width: 300px;
+            height: 300px;
+            border-radius: 100%;
+            border: 4px solid red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 40%;
+            margin-top: 20px;
+        }
+
+        #min,
+        #lim,
+        #sec {
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            width: 30%;
+            margin-left: 42%;
+        }
+
+        .form-control-lg {
+            margin-bottom: 30px;
+        }
+
+        .btn-success {
+            margin-left: 10px !important;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div id="clock">
+        <p id="min">0</p>
+        <p id="lim">:</p>
+        <p id="sec">00</p>
+    </div>
+    <div class="form-group mt-4">
+        <input type="text" placeholder="Enter Minute" class="form-control-lg" id="mins">
+        <input type="text" placeholder="Enter Seconds" class="form-control-lg" id="secs">
+        <div style="width: 300px;">
+            <button class="btn btn-danger w-20 form-control-lg ml-4" id="rest">Reset Time</button>
+            <button class="btn btn-success w-20 form-control-lg ml-4" id="stop">Start</button>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    let name=["TIMEOUT", "", "TIMEOUT"];
+    let pre = false;
+    let k,h;
+    let ti = 0;
+    let paumin, pausec, mins, secs, t;
+    let min = document.getElementById('mins');
+    let sec = document.getElementById('secs');
+    let minutes = document.getElementById('min');
+    let limite = document.getElementById('lim');
+    let seconds = document.getElementById('sec');
+    let ss = document.getElementById('stop');
+    let inps = document.querySelectorAll('input');
+    let buts = document.querySelectorAll('button');
+    for (let i = 0; i < inps.length; i++) {
+        inps[i].addEventListener('input', set)
+    }
+    for (let j = 0; j < buts.length; j++) {
+        buts[j].addEventListener('click', but)
+    }
+    function set(a) {
+        if (minutes.innerHTML == "0") {
+            minutes.innerHTML = "";
+        } else if (seconds.innerHTML == "0") {
+            seconds.innerHTML = "";
+        }
+        if (a.target.id == "mins") {
+            mins = a.target.value;
+            minutes.innerHTML = mins;
+        }
+        else if (a.target.id == "secs") {
+            secs = a.target.value;
+            seconds.innerHTML = secs;
+        }
+    }
+
+    function but(a) {
+        pre = true;
+        if (a.target.id == "rest") {
+            console.log(a.target.id);
+            clearInterval(t);
+            clearInterval(k);
+            clearInterval(h);
+            ss.innerHTML = "Start"
+            min.value="";
+            sec.value="";
+            minutes.innerHTML="";
+            seconds.innerHTML="";
+            limite.innerHTML="";
+            limite.innerHTML=":"
+            minutes.innerHTML = "0";
+            seconds.innerHTML = "00";
+           
+
+        }
+        else if (a.target.id == "stop") {
+            if (pre == true && a.target.innerHTML == "Start") {
+                ss.innerHTML = "Pause"
+                t = setInterval(display, 1000);
+                let countsec = Number(seconds.innerHTML);
+                let countmin = Number(minutes.innerHTML);
+                function display() {
+                    if (!countsec) {
+                        seconds.innerHTML = "";
+                        countmin = (countmin) - 1;
+                        countsec = 60;
+                    }
+                    countsec--;
+                    seconds.innerHTML = countsec;
+                    minutes.innerHTML = countmin;
+                    console.log(countsec);
+                    console.log(countmin);
+                    if (minutes.innerHTML == "0" && seconds.innerHTML == "0") {
+                        ss.innerHTML = "Start"
+                        clearInterval(t);
+                        flash();
+
+                    }
+                }
+            }
+            else if (pre == true && a.target.innerHTML == "Pause") {
+                if (pre == true) {
+                    ss.innerHTML = ""
+                    ss.innerHTML = "Start"
+                    paumin = Number(minutes.innerHTML);
+                    pausec = Number(seconds.innerHTML);
+                    countmin = paumin;
+                    countsec = pausec
+                    minutes.innerHTML = countmin;
+                    seconds.innerHTML = countsec;
+                    clearInterval(t);
+                    if (pre == true && a.target.innerHTML == "start") {
+                        if (pre == true) {
+                            display();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+function flash(){
+    let audio=new Audio('')
+    audio.src='Bells.mp3';
+    minutes.innerHTML="";
+    seconds.innerHTML="";
+    limite.innerHTML="";
+    function blink(){
+    minutes.innerHTML='Time Out!';
+    let audio=new Audio('')
+    audio.src='Bells.mp3';
+    audio.play();
+        
+    }
+    function blink2(){
+        minutes.innerHTML="";
+    }
+   
+  k=  setInterval(blink,1000)
+   h=  setInterval(blink2,2000)
+}
+  
+
+    
+</script>
